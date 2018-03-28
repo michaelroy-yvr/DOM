@@ -1,0 +1,63 @@
+//DOM pages
+#dom-pages {
+    color: #755c41;
+    font-family: din-2014, sans-serif;
+    .columns-1-flash {
+        display: none !important;
+    }
+    .navbar-brand img {
+        cursor: pointer;
+    }
+    #menu-toggle {
+        display: none;
+    }
+    input[type=text],
+    #petition_signature_email,
+    #petition_signature_mobile_number {
+        border: 1px solid #d54b00;
+        color: #d54b00;
+    }
+    #petition_signature_email_opt_in,
+    #petition_signature_mobile_opt_in {
+        border: 1px solid #d54b00;
+    }
+    .checkbox span {
+        color: #d54b00;
+    }
+    #leader {
+        background-color: #F3F3F3;
+        background-size: cover;
+        background-repeat: repeat;
+        .inner {
+            border-bottom: 6px solid #d54b00;
+        }
+    }
+    .headline {
+        color: #d54b00;
+        font-family: 'vanguard_cfbold', sans-serif;
+        display: block;
+    }
+    h2 {
+        font-family: 'vanguard_cfbold', sans-serif;
+    }
+    .submit-button {
+        background-color: #d54b00;
+        color: white;
+        font-family: 'vanguard_cfbold', sans-serif;
+    }
+    .share-sheet .cell.twitter-cell a {
+        color: white;
+    }
+    #content {
+        background-color: #fef9eb;
+        .inner {
+            padding: 20px;
+        }
+    }
+    .cell {
+        font-family:  'vanguard_cfbold', sans-serif;
+        &:hover {
+            cursor: pointer;
+        }
+    }
+}

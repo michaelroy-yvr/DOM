@@ -1,0 +1,169 @@
+{% assign NationSlug = '' %} 
+{% capture ThemeURLString %}{{ theme['layout.html'] }}{% endcapture %} 
+{% assign url_parts = ThemeURLString | split:'/' %}  
+{% assign SubDomain = url_parts[2] | split:'.' %} 
+{% if SubDomain[0] contains '-' %} 
+{% assign NationSlugParts = SubDomain[0] | split:'-' %} 
+{% assign NationSlug = NationSlugParts[1] %}
+{% else %} 
+{% assign NationSlug = SubDomain[0] %} 
+{% endif %}
+
+{% assign fb_app_id = 1536687646398941 %}
+{% assign is_newmode = false %}
+{% assign is_hqsharing = false %}
+{% assign is_hqadmin = false %}
+{% if page.tags_count > 0 %}
+	{% capture themetags %}
+	{% for tag in page.tags %}{% if tag.name contains "theme-" %}{{ tag.name }} {% endif %}{% endfor %}
+	{% endcapture %}
+	{% capture pagetags %}
+	{% for tag in page.tags %}{% if tag.name contains "page-" %}{{ tag.name }} {% endif %}{% endfor %}
+	{% endcapture %}
+{% endif %}
+{% for tag in page.tags %}
+  {% if tag.name contains "newmode" %}{% assign is_newmode = true %}{% endif %}
+  {% if tag.name contains "hq-share" %}{% assign is_hqsharing = true %}{% assign hq_fulltag = tag.name %}{% endif %}
+  {% if tag.name contains "hq-admin" %}{% assign is_hqadmin = true %}{% endif %}
+{% endfor %}
+
+{% if request.sorta_logged_in? %}{% assign user_id = request.current_signup.id %}
+{% elsif request.logged_in? %}{% assign user_id = request.current_user.id %}{% endif %}
+
+{% assign page_bg = false %}
+{% if page.features_count > 0 %}
+{% for feature in page.features limit: 1 %}{% if feature.headline != 'blank' %}{% assign page_bg = feature.image_url %}{% endif %}{% endfor %}
+{% endif %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ page_title }}</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+	<link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32">
+	<link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16">
+	<link rel="manifest" href="manifest.json">
+	<link rel="mask-icon" href="safari-pinned-tab.svg" color="#68b545">
+	<meta name="theme-color" content="#ffffff">
+    
+    <link href="https://fonts.googleapis.com/css?family=Rubik:400,400i,500,500i,700|Teko:300,400,500,600,700" rel="stylesheet">
+    <link href="fonts.css" rel="stylesheet">
+    
+	{% comment %}<link href="https://clcsec:8890/theme.css" rel="stylesheet">{% endcomment %}
+    <link href="theme.scss" rel="stylesheet">
+
+    {{ content_for_header }}
+    {% comment %}<script data-cfasync="false" type="text/javascript" data-bablic="593043042811883f05a66f30" data-bablic-m="[0,'en','en',1,['fr'],0,0,0,0,0,0,0,0,[],'act.caut.ca/',['getscienceright-caut.nationbuilder.com','dev-caut.nationbuilder.com'],['_v',2]]" src="//cdn2.bablic.com/js/bablic.3.9.js"></script>{% endcomment %}
+    
+    <script src="ouical.js" type="text/javascript"></script>
+    <script src="fastclick.js"></script>
+    <script src="clc.js" type="text/javascript"></script>
+    {% comment %}<script src="https://clcsec:8890/clc.js" type="text/javascript"></script>{% endcomment %}
+    <script csrc="{{ theme['hq.js'] }}" class="hq-script" type="text/javascript"></script>
+    {% comment %}<script csrc="https://clcsec:8890/hq.js" class="hq-script" type="text/javascript"></script>{% endcomment %}
+    
+    {% comment %}<script>document.write('<script src="http://' + ('localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>{% endcomment %}
+
+    <script type="text/javascript">
+      NB.appConfig.userIsLoggedIn = {{request.logged_in?}};
+    </script>
+  </head>
+
+  {% for tag in page.tags %}
+{% if tag.name == 'dom' %} 
+{% assign dom = true %}
+{% endif %}
+{% endfor %}
+
+  <body id="{% if dom %}dom-pages{% endif %}" class="{{ page.page_class_name }} page-tpl-{{ request.template | replace: '_', '-' }} page-{{ page.slug }} site-{{ site.slug }}  {% if request.is_sidebar? and request.template == 'pages_show_basic' and page.is_homepage? == false %}sidebar{% else %}no-sidebars{% endif %} {{ themetags }} {{ pagetags }} {% if page.is_homepage? == true %}page-front{% else %}not-front{% endif %} {% if page_bg %}bg-image{% endif %}{% if request.logged_in? or request.sorta_logged_in? %}logged-in{% endif %}{% if is_newmode %}newmode{% endif %}{% if is_hqsharing %} hq-share{% endif %}{% if is_hqadmin %} hq-admin{% endif %} nation-{{ NationSlug }}" {% if is_hqsharing %}data-shareids="{{ hq_fulltag }}"{% endif %}{% if user_id %}data-userid="{{ user_id }}"{% endif %}{% comment %}{% if page_bg %}style="background-image: url({{ page_bg }});"{% endif %}{% endcomment %}>
+
+    <div class="layout-center">
+	    <header>
+		    <div class="inner">
+			    {% include "nav" %}
+			</div>
+	    </header>
+    	
+    	
+    	{% comment %}
+    	{% if site.has_header_image? and page.features_count == 0 %}
+    	    	<div class="container header-image-container">
+    	    	 <img src="{{ site.header_image_url_1026 }}" class="header-image img-responsive" border="0" />
+    	    	</div>
+    	    	{% endif %}
+    	{% endcomment %}
+    	
+    	{% comment %}
+    	slider features - disabled for CLC. featured field is used for background images
+    	    	{% if page.features_count > 0 %}
+    	    	  <div class="container">
+    	    	   {% include "features" %}
+    	    	  </div>
+    	    	{% endif %}
+    	{% endcomment %}
+    	
+    	<div class="layout-outer">
+<!--     	<div class="layout-swap"> -->
+	    	
+<!-- 	    	<main class="main-container" id="middle"> -->
+<!--     		  <div class="main container clearfix "> -->
+    		
+    		    {% if request.is_sidebar? and request.template == 'pages_show_basic' %}
+    		    {% include "columns_2" %}
+    		    {% else %}
+    		    {% include "columns_1" %}
+    		    {% endif %}
+    		
+<!--     		  </div> -->
+    		  <!-- .main -->
+<!--     		</main> -->
+    		<!-- .main-container -->
+<!--     	</div> -->
+    	</div>
+    	<!-- .layout-swap -->
+    	<div class="page-bottom">
+    		<div class="inner">
+    			<div class="page-bottom-content"></div>
+    		</div>
+    	</div>
+    	<footer>
+	    	<div class="inner">
+	    	{{ content_for_footer }}
+	    	
+	    	{% if site.footer_content.size > 0 %}
+				<div class="footer-text">{{ site.footer_content }}</div>
+			{% endif %}
+			</div>
+    	</footer>
+    	
+    </div>
+
+    {% comment %}
+    {% if site.has_background_image? %}
+          <!--[if lt IE 9]>
+          <script type="text/javascript" src="/javascripts/jquery.backstretch.min.js"></script>
+          <script type="text/javascript">
+            jQuery.backstretch("{{ site.background_image_url }}", {speed: 0});
+          </script>
+          <![endif]-->
+          <style>
+            body {
+              background: url('{{ site.background_image_url }}') no-repeat center center fixed;
+              -webkit-background-size: cover;
+              -moz-background-size: cover;
+              -o-background-size: cover;
+              background-size: cover;
+            }
+        </style>
+        {% endif %}
+    {% endcomment %}
+
+    <script src="bootstrap.js"></script>
+
+  </body>
+</html>
+
